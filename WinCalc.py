@@ -1,4 +1,5 @@
 import tkinter as tk
+
 def fnAdicao():
     x=float(entryNumero1.get())
     y=float(entryNumero2.get())
