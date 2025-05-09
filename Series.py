@@ -1,44 +1,34 @@
 import streamlit as st
+import json
+import os
 import datetime
 
-# 1. Adiciona imagem de fundo via CSS (substitua o link pela imagem desejada)
-# e personaliza fontes e fundos dos campos
-st.markdown(
-    """
-    <style>
-    /* Fundo da página com imagem */
-    .stApp {
-        background-image: url('https://img.odcdn.com.br/wp-content/uploads/2024/11/reacher--1024x576.jpg');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        opacity: 0.9;
-    }
-    /* Fundo dos inputs e textarea */
-    .stTextInput input, .stNumberInput input, .stTextArea textarea, select, input, textarea {
-        background: black !important;
-        color: white !important;
-    }
-    /* Cor dos títulos e mensagens em vermelho */
-    h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6,
-    label, .stMarkdown p, .stMarkdown, .stText {
-        color: red !important;
-    }
-    /* Garante que o texto digitado nos campos fique branco */
-    .stTextInput input, .stNumberInput input, .stTextArea textarea, input, textarea {
-        color: white !important;
-    }
-    /* Mensagens específicas em vermelho */
-    .custom-message-red {
-        color: red !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Nome do arquivo Json
+ARQUIVO_DADOS = "series.json"
 
-# 2. Container principal para os campos do formulário
-with st.container():
+def carregar_dados():
+    if os.path.exists(ARQUIVO_DADOS):
+        with open(ARQUIVO_DADOS, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def salvar_dados(dados):
+    with open(ARQUIVO_DADOS, "w", encoding="utf-8") as f:
+        json.dump(dados, f, ensure_ascii=False, indent=4)
+
+def criar_serie(nome_Serie, ano_Serie, season_Serie, episodios_Serie, pais_Serie, categoria_Serie):
+    return {
+        "nome_Serie": nome_Serie,
+        "ano_Serie": ano_Serie,
+        "season_Serie": season_Serie,
+        "episodios_Serie": episodios_Serie,
+        "pais_serie": pais_Serie,
+        "categoria_Serie": categoria_Serie
+    }
+    
+
+def cadastrar_serie(): # 2. Container principal para os campos do formulário
+#    with st.container():
     st.title('Bem-vindo(a)')
     st.write('Chega mais ao nosso portal de séries!')
 
@@ -69,3 +59,32 @@ with st.container():
         }
         st.success('Dados da série salvos com sucesso!')
         st.write(dados_serie)  # Exibe os dados salvos (opcional)
+
+def listar_series():
+    pass
+
+def editar_serie():
+    pass
+
+def excluir_serie():
+    pass
+
+# Menu lateral
+st.sidebar.title("Menu")
+opcao = st.sidebar.radio("Selecione uma opção:", ("Cadastrar Série", "Listar Séries", "Editar Série", "Excluir Série"))
+
+# Navegaçãoe entre páginas
+
+if opcao == "Cadastrar Série":
+    cadastrar_serie()
+elif opcao == "Listar Série":
+    listar_series()
+elif opcao == "Editar Série":
+    editar_serie()
+elif opcao == "Excluir Série":
+    excluir_serie()
+
+# Rodapé
+st.sidebar.markdown("---")
+st.sidebar.markdown("Desenvolvido por Ana Claro")
+st.sidebar.markdown(f"Total de séries: ")
